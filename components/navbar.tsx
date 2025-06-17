@@ -35,6 +35,7 @@ export default function NavHeader() {
               </DropdownTrigger>
               <DropdownMenu>
                 <DropdownItem
+                  key="account"
                   startContent={<User01Icon stroke="currentColor" />}
                   onClick={() => {
                     router.replace("/account");
@@ -43,6 +44,7 @@ export default function NavHeader() {
                   Обліковий запис
                 </DropdownItem>
                 <DropdownItem
+                  key="logout"
                   color="danger"
                   startContent={<ExitIcon stroke="currentColor" />}
                   onClick={() => {
