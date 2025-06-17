@@ -4,7 +4,7 @@ module.exports = {
     return [
       {
         source: "/api/:path*",
-        destination: "https://image-share-backend.onrender.com/api/:path*",
+        destination: "https://vntu-task-back.onrender.com/api/:path*",
       },
     ];
   },
