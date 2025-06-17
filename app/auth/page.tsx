@@ -30,12 +30,14 @@ export default function AuthPage() {
   }, [account]);
   async function handleAuthorization(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const { target } = e;
-    const formData = axios.formToJSON(target as unknown as GenericFormData);
+    const formData = Object.fromEntries(
+      new FormData(e.target as HTMLFormElement)
+    );
 
     try {
       setError("");
       setLoading(true);
+
       await axios.post("/api/auth/signin", formData, {
         headers: {
           "Content-Type": "application/json",
@@ -43,57 +45,44 @@ export default function AuthPage() {
       });
 
       const me = await getUser();
-
-      setLoading(false);
-
       setAccount(me as Account);
       router.push("/account");
     } catch (err) {
-      setLoading(false);
-
-      if (err instanceof AxiosError) {
-        setError(
-          Array.isArray(err.response?.data.message)
+      setError(
+        err instanceof AxiosError
+          ? Array.isArray(err.response?.data.message)
             ? err.response?.data.message[0]
-            : err.response?.data.message,
-        );
-      } else {
-        setError("Критична помилка");
-      }
+            : err.response?.data.message
+          : "Критична помилка"
+      );
+    } finally {
+      setLoading(false);
     }
   }
+
   async function handleRegistration(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const { target } = e;
-    const formData = axios.formToJSON(target as unknown as GenericFormData);
+    const formData = new FormData(e.target as HTMLFormElement);
 
     try {
       setError("");
       setLoading(true);
 
-      await axios.post("/api/auth/signup", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      await axios.post("/api/auth/signup", formData); // без headers
+
       const me = await getUser();
-
-      setLoading(false);
-
       setAccount(me as Account);
       router.push("/account");
     } catch (err) {
-      setLoading(false);
-
-      if (err instanceof AxiosError) {
-        setError(
-          Array.isArray(err.response?.data.message)
+      setError(
+        err instanceof AxiosError
+          ? Array.isArray(err.response?.data.message)
             ? err.response?.data.message[0]
-            : err.response?.data.message,
-        );
-      } else {
-        setError("Критична помилка");
-      }
+            : err.response?.data.message
+          : "Критична помилка"
+      );
+    } finally {
+      setLoading(false);
     }
   }
 
